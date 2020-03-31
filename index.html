@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<!-- Load bootstrap.css -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<!-- Load c3.css -->
+	<link href="css/c3.min.css" rel="stylesheet">
+	<!-- Load d3.js and c3.js -->
+	<script src="https://d3js.org/d3.v5.min.js" charset="utf-8"></script>
+	<script src="js/c3.min.js"></script>
+</head>
+<body>
+	<nav class="navbar sticky-top navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+	  <a class="navbar-brand" href="https://charlos.github.io/">CF</a>
+	  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	    <span class="navbar-toggler-icon"></span>
+	  </button>
+
+	  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	    <ul class="navbar-nav mr-auto">
+	      <li class="nav-item active">
+	        <a class="nav-link" href="#">Gráfica Diaria <span class="sr-only">(current)</span></a>
+	      </li>
+	      <li class="nav-item">
+        	<a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Más recursos ></a>
+      		</li>
+	      <li class="nav-item">
+	        <a class="nav-link" href="https://charlos.github.io/cuarentenaargentina/" target="_blank">Tiempo de Cuarentena</a>
+	      </li>
+	      <li class="nav-item">
+	        <a class="nav-link" href="https://scratch.mit.edu/projects/378827227/" target="_blank">COVID-19 en Scratch</a>
+	      </li>
+	      <li class="nav-item">
+	        <a class="nav-link" href="https://www.argentina.gob.ar/coronavirus/informe-diario/" target="_blank">Datos Oficiales</a>
+	      </li>
+	    </ul>
+	  </div>
+	</nav>
+
+	<main role="main" class="container">
+		<div class="row border border-light rounded bg-light m-1">
+			<div class="col">
+		  		<h1>Coronavirus COVID-19 Argentina</h1>
+		  		<h5>Actualización diaria</h5>
+		  		<p class="font-weight-lighter">Última fecha de actualización: <span id="lastDate"></span></p>
+
+			</div>
+		</div>
+	  	<div class="row border border-light rounded bg-light m-1">
+	    	<div class="col">
+	      		<div>
+	      			<h5>Seguimiento Diario</h5>
+	      			<div id="timeline"></div>
+	      		</div>
+	    	</div>
+	  	</div>
+	  	<div class="row border border-light rounded bg-light m-1">
+	    	<div class="col">
+	      		<div>
+	      			<h5>Porcentaje Actual</h5>
+	      			<div id="percentage"></div>
+	      		</div>
+	    	</div>
+	  	</div>
+		<div class="row border border-light rounded bg-light m-1">
+			<div class="col">
+				<p class="text-center"><a href="https://charlos.github.io/cuarentenaargentina/" target="_blank" class="text-center">Tiempo de Cuarentena en Argentina</a></p>
+			</div>
+			<div class="col">
+				<p class="text-center"><a href="https://scratch.mit.edu/projects/378827227/" target="_blank" class="text-center">COVID-19 en Scratch</a></p>
+			</div>
+			<div class="col">
+				<p class="text-center"><a href="https://www.argentina.gob.ar/coronavirus/informe-diario/" target="_blank" class="text-center">Datos Oficiales</a></p>
+			</div>
+		</div>
+	</main>
+
+  	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="js/jquery.csv.min.js"></script>
+	<script type="text/javascript" src="js/infocovid19argentina.js"></script>
+	<script type="text/javascript">
+		const infoCovid19 = new InfoCovid19Argentina({timelineId: "timeline", percentageId: "percentage", lastDateId: "lastDate"})
+		$(document).ready(() => {
+			infoCovid19.buildTimeline()
+		});
+	</script>
+</body>
+</html>
