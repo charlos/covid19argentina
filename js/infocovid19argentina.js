@@ -53,6 +53,9 @@ class InfoCovid19Argentina {
             },
             axis: {
                 x: {
+                    tick: {
+                        multiline: false
+                    },
                     label: 'A\u00F1o 2020',
                     type: 'category',
                     categories: this.totalInfo.categories
@@ -82,6 +85,14 @@ class InfoCovid19Argentina {
                     this.totalInfo.death
                 ],
                 type : 'pie'
+            },
+            pie: {
+                label: {
+                    threshold: 0.01,
+                    format: function (value, ratio, id) {
+                        return d3.format("")(value);
+                    }
+                }
             }
         });
     }
@@ -192,7 +203,7 @@ class InfoCovid19Argentina {
 
         this.percentage.load({
             columns: [
-                ["No Fallecidos", totalConfirmed],
+                ["No Fallecidos", totalConfirmed-totalDeaths],
                 [this.totalInfo.death[0], totalDeaths]
             ]
         });
