@@ -6,10 +6,25 @@
  **
  **/
 class InfoCovid19Argentina {
-    constructor({timelineId=null, percentageId=null, lastDateId=null}) {
+    constructor({datasource=0, timelineId=null, percentageId=null, lastDateId=null, datasourceDescriptionId=null}) {
+        this.indexDatasource = datasource
         this.timelineId = timelineId
         this.percentageId = percentageId
         this.lastDateId = lastDateId
+        this.datasourceDescriptionId = datasourceDescriptionId
+        this.datasource = [
+            {
+                confirmedUrl: "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
+                deathUrl: "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv",
+                description: "Estos datos pueden tener una demora de hasta 24hs en actualizarse con respecto a los datos oficiales del Ministerio de Salud."
+            },
+            {
+                confirmedUrl: "https://7452cdb5-83c6-4b4b-a158-efe94aa00b34.mock.pstmn.io/argentina/time_series_covid19_confirmed",
+                deathUrl: "https://7452cdb5-83c6-4b4b-a158-efe94aa00b34.mock.pstmn.io/argentina/time_series_covid19_deaths",
+                description: "Estos datos pueden contener errores ya que son actualizados manualmente para reducir la demora con respecto a los datos oficiales del Ministerio de Salud."
+
+            }
+        ]
         this.totalInfo = {
             categories: ["x"],
             confirmed: ["Confirmados"],
@@ -72,7 +87,7 @@ class InfoCovid19Argentina {
     }
 
     _getConfirmedInfo(callback) {
-        const confirmedUrl = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv";
+        const confirmedUrl = this.datasource[this.indexDatasource].confirmedUrl
         let data = null
         const self = this
 
@@ -85,9 +100,10 @@ class InfoCovid19Argentina {
             dataType: "text",
             complete: function () {
                 const result = self._dataProcessor(data)
-                
-                self.totalInfo.confirmed = self.totalInfo.confirmed.concat(result.info);
-                if(self.totalInfo.categories.length == 1) self.totalInfo.categories = result.categories;
+                result.info.unshift(self.totalInfo.confirmed[0])
+
+                self.totalInfo.confirmed = result.info
+                /*if(self.totalInfo.categories.length == 1)*/ self.totalInfo.categories = result.categories
 
                 callback()
             }
@@ -95,7 +111,7 @@ class InfoCovid19Argentina {
     }
 
     _getDeathsInfo(callback) {
-        const deathUrl = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_global.csv";
+        const deathUrl = this.datasource[this.indexDatasource].deathUrl;
         let data = null
         const self = this
 
@@ -108,9 +124,10 @@ class InfoCovid19Argentina {
             dataType: "text",
             complete: function () {
                 const result = self._dataProcessor(data)
-                
-                self.totalInfo.death = self.totalInfo.death.concat(result.info);
-                if(self.totalInfo.categories.length == 1) self.totalInfo.categories = result.categories;
+                result.info.unshift(self.totalInfo.death[0])
+
+                self.totalInfo.death = result.info
+                /*if(self.totalInfo.categories.length == 1)*/ self.totalInfo.categories = result.categories;
 
                 callback()
             }
@@ -137,7 +154,7 @@ class InfoCovid19Argentina {
         return {info: info, categories: categories}
     }
 
-    buildTimeline() {
+    buildAll() {
         const self = this
         this._getConfirmedInfo(() => self.render())
         this._getDeathsInfo(() => self.render())
@@ -147,17 +164,24 @@ class InfoCovid19Argentina {
         const lastDateBind = "#" + this.lastDateId
         const lastDate = this._getLastDate()
         $(lastDateBind).text(lastDate)
-        
+
+        const dsBind = "#" + this.datasourceDescriptionId
+        $(dsBind).text(this.datasource[this.indexDatasource].description)
+
         this.renderTimeline()
         this.renderPercentage()
     }
 
     renderTimeline() {
+        const categories = this.totalInfo.categories
+        const confirmed = this.totalInfo.confirmed
+        const death = this.totalInfo.death
+
         this.timeline.load({
             columns: [
-                this.totalInfo.categories,
-                this.totalInfo.confirmed,
-                this.totalInfo.death
+                categories,
+                confirmed,
+                death
             ]
         });
     }
