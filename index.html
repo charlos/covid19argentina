@@ -1,7 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+	<meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="author" content="Carlos Flores">
+    <meta name="description" content="Gráfica Diaria de Covid-19 en Argentina">
+    <meta name="keywords" content="">
+	<title>Covid-19 | Argentina</title>
 	<!-- Load bootstrap.css -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 	<!-- Load c3.css -->
@@ -53,7 +59,7 @@
 					<label for="sel1">Origen de Datos</label>
 					<select class="form-control" id="datasourceSelector">
 						<option value="0">OMS (Organización Mundial de la Salud)</option>
-						<option value="1">OMS (Actualización Manual)</option>
+						<option value="1">MS (Ministerio de Salud) - Actualización Manual</option>
 					</select>
 				</div>							
 			</div>
@@ -77,7 +83,7 @@
 	  	</div>
 		<div class="row border border-light rounded bg-light m-1">
 			<div class="col">
-				<p class="text-center"><a href="https://charlos.github.io/cuarentenaargentina/" target="_blank" class="text-center">Tiempo de Cuarentena en Argentina</a></p>
+				<p class="text-center"><a href="https://charlos.github.io/cuarentenaargentina/" target="_blank" class="text-center">Tiempo de Cuarentena</a></p>
 			</div>
 			<div class="col">
 				<p class="text-center"><a href="https://scratch.mit.edu/projects/378827227/" target="_blank" class="text-center">COVID-19 en Scratch</a></p>
@@ -90,7 +96,7 @@
 
   	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 	<script src="js/jquery.csv.min.js"></script>
-	<script type="text/javascript" src="js/infocovid19argentina.js"></script>
+	<script type="text/javascript" src="js/infocovid19argentina.js?v=202003310001"></script>
 	<script type="text/javascript">
 		const infoCovid19 = new InfoCovid19Argentina({timelineId: "timeline", percentageId: "percentage", lastDateId: "lastDate", datasourceDescriptionId: "dsDescription"})
 		
