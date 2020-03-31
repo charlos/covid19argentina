@@ -90,7 +90,7 @@ class InfoCovid19Argentina {
                 label: {
                     threshold: 0.01,
                     format: function (value, ratio, id) {
-                        return d3.format("")(value);
+                        return d3.format(".1%")(ratio) + " (" + value + ")";
                     }
                 }
             }
