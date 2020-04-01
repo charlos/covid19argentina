@@ -6,9 +6,10 @@
  **
  **/
 class InfoCovid19Argentina {
-    constructor({datasource=0, timelineId=null, percentageId=null, lastDateId=null, datasourceDescriptionId=null}) {
+    constructor({datasource=0, timelineId=null, barchartId=null, percentageId=null, lastDateId=null, datasourceDescriptionId=null}) {
         this.indexDatasource = datasource
         this.timelineId = timelineId
+        this.barchartId = barchartId
         this.percentageId = percentageId
         this.lastDateId = lastDateId
         this.datasourceDescriptionId = datasourceDescriptionId
@@ -36,8 +37,10 @@ class InfoCovid19Argentina {
 
     _init() {
         const timelineBind = "#" + this.timelineId
+        const barchartBind = "#" + this.barchartId
         const percentageBind = "#" + this.percentageId
         this.timeline = null
+        this.barchart = null
         this.percentage = null
         this.country = "Argentina"
 
@@ -50,6 +53,48 @@ class InfoCovid19Argentina {
                     this.totalInfo.confirmed,
                     this.totalInfo.death
                 ]
+            },
+            axis: {
+                x: {
+                    tick: {
+                        multiline: false
+                    },
+                    label: 'A\u00F1o 2020',
+                    type: 'category',
+                    categories: this.totalInfo.categories
+                },
+                y: {
+                    label: 'Casos'
+                }
+            },
+            grid: {
+                x: {
+                    show: true
+                },
+                y: {
+                    show: true
+                }
+            },
+            zoom: {
+                enabled: false
+            }
+        });
+        
+        this.barchart = c3.generate({
+            bindto: barchartBind,
+            data: {
+                x : 'x',
+                columns: [
+                    this.totalInfo.categories,
+                    this.totalInfo.confirmed,
+                    this.totalInfo.death
+                ],
+                type: 'bar'
+            },
+            bar: {
+                width: {
+                    ratio: 0.5 // this makes bar width 50% of length between ticks
+                }
             },
             axis: {
                 x: {
@@ -180,6 +225,7 @@ class InfoCovid19Argentina {
         $(dsBind).text(this.datasource[this.indexDatasource].description)
 
         this.renderTimeline()
+        this.renderBarchart()
         this.renderPercentage()
     }
 
@@ -189,6 +235,20 @@ class InfoCovid19Argentina {
         const death = this.totalInfo.death
 
         this.timeline.load({
+            columns: [
+                categories,
+                confirmed,
+                death
+            ]
+        });
+    }
+
+    renderBarchart() {
+        const categories = this.totalInfo.categories
+        const confirmed = this._getNewCasesConfirmed()
+        const death = this._getNewCasesDeath()
+
+        this.barchart.load({
             columns: [
                 categories,
                 confirmed,
@@ -218,6 +278,32 @@ class InfoCovid19Argentina {
         const fullDate = partialDate + "/2020"
 
         return fullDate
+    }
+
+    _getNewCasesConfirmed() {
+        if(this.totalInfo.confirmed.length == 1) return this.totalInfo.confirmed
+        
+        const newCasesConfirmed = new Array("Confirmados", 0)
+        for (var i = 2; i < this.totalInfo.confirmed.length; i++) {
+            const value = this.totalInfo.confirmed[i] - this.totalInfo.confirmed[i-1]
+            newCasesConfirmed.push(value)
+        }
+        console.log("New Cases Confirmed: ", newCasesConfirmed)
+
+        return newCasesConfirmed
+    }
+
+    _getNewCasesDeath() {
+        if(this.totalInfo.death.length == 1) return this.totalInfo.death
+        
+        const newCasesDeath = new Array("Fallecidos", 0)
+        for (var i = 2; i < this.totalInfo.death.length; i++) {
+            const value = this.totalInfo.death[i] - this.totalInfo.death[i-1]
+            newCasesDeath.push(value)
+        }
+        console.log("New Cases Death: ", newCasesDeath)
+
+        return newCasesDeath
     }
 
 }

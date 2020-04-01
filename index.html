@@ -73,6 +73,14 @@
 	      		</div>
 	    	</div>
 	  	</div>
+		<div class="row border border-light rounded bg-light m-1">
+	    	<div class="col">
+	      		<div>
+	      			<h5>Nuevos Casos Diarios</h5>
+	      			<div id="barchart"></div>
+	      		</div>
+	    	</div>
+	  	</div>
 	  	<div class="row border border-light rounded bg-light m-1">
 	    	<div class="col">
 	      		<div>
@@ -96,9 +104,9 @@
 
   	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 	<script src="js/jquery.csv.min.js"></script>
-	<script type="text/javascript" src="js/infocovid19argentina.js?v=202003310002"></script>
+	<script type="text/javascript" src="js/infocovid19argentina.js?v=202003310003"></script>
 	<script type="text/javascript">
-		const infoCovid19 = new InfoCovid19Argentina({timelineId: "timeline", percentageId: "percentage", lastDateId: "lastDate", datasourceDescriptionId: "dsDescription"})
+		const infoCovid19 = new InfoCovid19Argentina({timelineId: "timeline", barchartId: "barchart", percentageId: "percentage", lastDateId: "lastDate", datasourceDescriptionId: "dsDescription"})
 		
 		$(document).ready(() => {
 			infoCovid19.buildAll()
