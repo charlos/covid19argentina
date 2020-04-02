@@ -106,10 +106,12 @@
 	<script src="js/jquery.csv.min.js"></script>
 	<script type="text/javascript" src="js/infocovid19argentina.js?v=202003310003"></script>
 	<script type="text/javascript">
-		const infoCovid19 = new InfoCovid19Argentina({timelineId: "timeline", barchartId: "barchart", percentageId: "percentage", lastDateId: "lastDate", datasourceDescriptionId: "dsDescription"})
+		const infoCovid19 = new InfoCovid19Argentina({datasource: 1, timelineId: "timeline", barchartId: "barchart", percentageId: "percentage", lastDateId: "lastDate", datasourceDescriptionId: "dsDescription"})
 		
 		$(document).ready(() => {
 			infoCovid19.buildAll()
+
+			$('#datasourceSelector').val(1)
 
 			$("#datasourceSelector").change(function(){
 		        const selectedDatasource = $(this).children("option:selected").val()
