@@ -29,7 +29,8 @@ class InfoCovid19Argentina {
         this.totalInfo = {
             categories: ["x"],
             confirmed: ["Confirmados"],
-            death: ["Fallecidos"]
+            death: ["Fallecidos"],
+            estimated: ["Estimados"]
         }
 
         this._init()
@@ -51,8 +52,13 @@ class InfoCovid19Argentina {
                 columns: [
                     this.totalInfo.categories,
                     this.totalInfo.confirmed,
-                    this.totalInfo.death
-                ]
+                    this.totalInfo.death,
+                    this.totalInfo.estimated
+                ],
+                colors: {
+                    Estimados: '#9E9E9E'
+                },
+                hide: ['Estimados']
             },
             axis: {
                 x: {
@@ -233,12 +239,15 @@ class InfoCovid19Argentina {
         const categories = this.totalInfo.categories
         const confirmed = this.totalInfo.confirmed
         const death = this.totalInfo.death
+        const estimated = this._getEstimatedCases()
+
 
         this.timeline.load({
             columns: [
                 categories,
                 confirmed,
-                death
+                death,
+                estimated
             ]
         });
     }
@@ -288,7 +297,6 @@ class InfoCovid19Argentina {
             const value = this.totalInfo.confirmed[i] - this.totalInfo.confirmed[i-1]
             newCasesConfirmed.push(value)
         }
-        console.log("New Cases Confirmed: ", newCasesConfirmed)
 
         return newCasesConfirmed
     }
@@ -301,9 +309,20 @@ class InfoCovid19Argentina {
             const value = this.totalInfo.death[i] - this.totalInfo.death[i-1]
             newCasesDeath.push(value)
         }
-        console.log("New Cases Death: ", newCasesDeath)
 
         return newCasesDeath
     }
 
+    _getEstimatedCases() {
+        const estimatedCases = new Array("Estimados")
+        if(this.totalInfo.death.length == 1) return estimatedCases
+        
+        for (var i = 1; i < this.totalInfo.death.length; i++) {
+            // the number of cases is estimated assuming a mortality rate of 1.5%
+            const value = Math.trunc(this.totalInfo.death[i]/0.015) 
+            estimatedCases.push(value)
+        }
+
+        return estimatedCases
+    }
 }
