@@ -6,13 +6,14 @@
  **
  **/
 class InfoCovid19Argentina {
-    constructor({datasource=0, timelineId=null, barchartId=null, percentageId=null, lastDateId=null, datasourceDescriptionId=null}) {
+    constructor({datasource=0, timelineId=null, barchartId=null, percentageId=null, lastDateId=null, datasourceDescriptionId=null, scale="linear"}) {
         this.indexDatasource = datasource
         this.timelineId = timelineId
         this.barchartId = barchartId
         this.percentageId = percentageId
         this.lastDateId = lastDateId
         this.datasourceDescriptionId = datasourceDescriptionId
+        this.scale = scale
         this.datasource = [
             {
                 confirmedUrl: "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv",
@@ -37,6 +38,7 @@ class InfoCovid19Argentina {
     }
 
     _init() {
+        self = this
         const timelineBind = "#" + this.timelineId
         const barchartBind = "#" + this.barchartId
         const percentageBind = "#" + this.percentageId
@@ -70,7 +72,15 @@ class InfoCovid19Argentina {
                     categories: this.totalInfo.categories
                 },
                 y: {
-                    label: 'Casos'
+                    label: 'Casos',
+                    tick: {
+                        values:function(range){
+                            return self._getValuesTick(range)
+                        },
+                        format:function(value){             
+                            return self._getFormatTick(value)
+                        }
+                    }
                 }
             },
             grid: {
@@ -112,7 +122,15 @@ class InfoCovid19Argentina {
                     categories: this.totalInfo.categories
                 },
                 y: {
-                    label: 'Casos'
+                    label: 'Casos',
+                    tick: {
+                        values:function(range){
+                            return self._getValuesTick(range)
+                        },
+                        format:function(value){             
+                            return self._getFormatTick(value)
+                        }
+                    }
                 }
             },
             grid: {
@@ -146,6 +164,39 @@ class InfoCovid19Argentina {
                 }
             }
         });
+    }
+
+    _getFormatTick(value) {
+        switch(this.scale) {
+            case "logarithmic":
+                let formattedValue = 0
+                if(value != 0) { 
+                    formattedValue = Math.pow(10, value).toFixed(0)
+                }
+                return formattedValue
+            default:
+                return value
+        }
+    }
+
+    _getValuesTick(range) {
+        let maxValue = range[1]
+        let array
+        let step
+        let len
+
+        switch(this.scale) {
+            case "logarithmic":
+                step = 1
+                len = Math.trunc(maxValue) + 1
+                array = Array.from({length: len}, (x,i) => i*step)
+                return array
+            default:
+                step = Math.trunc(maxValue/10)
+                len = 11
+                array = Array.from({length: len}, (x,i) => i*step)
+                return array
+        }
     }
 
     _getConfirmedInfo(callback) {
@@ -237,9 +288,9 @@ class InfoCovid19Argentina {
 
     renderTimeline() {
         const categories = this.totalInfo.categories
-        const confirmed = this.totalInfo.confirmed
-        const death = this.totalInfo.death
-        const estimated = this._getEstimatedCases()
+        const confirmed = this._adjustToScale(this.totalInfo.confirmed)
+        const death = this._adjustToScale(this.totalInfo.death)
+        const estimated = this._adjustToScale(this._getEstimatedCases())
 
 
         this.timeline.load({
@@ -250,12 +301,14 @@ class InfoCovid19Argentina {
                 estimated
             ]
         });
+
+        console.log("confirmed: ", confirmed)
     }
 
     renderBarchart() {
         const categories = this.totalInfo.categories
-        const confirmed = this._getNewCasesConfirmed()
-        const death = this._getNewCasesDeath()
+        const confirmed = this._adjustToScale(this._getNewCasesConfirmed())
+        const death = this._adjustToScale(this._getNewCasesDeath())
 
         this.barchart.load({
             columns: [
@@ -263,7 +316,7 @@ class InfoCovid19Argentina {
                 confirmed,
                 death
             ]
-        });
+        })
     }
 
     renderPercentage() {
@@ -276,6 +329,34 @@ class InfoCovid19Argentina {
                 [this.totalInfo.death[0], totalDeaths]
             ]
         });
+    }
+
+    _adjustToScale(array) {
+        switch(this.scale) {
+            case "logarithmic":
+                return this._convertToLogScale(array)
+            default:
+                return array
+        }
+    }
+
+    _convertToLogScale(array) {
+        const arrayLog = [array[0]]
+        for(var i=1; i<array.length; i++){
+            const value = parseInt(array[i]) 
+            switch(value) {
+            case 0:
+                arrayLog[i] = 0
+                break
+            case 1:
+                arrayLog[i] = 0.1
+                break
+            default:
+                arrayLog[i] = Math.log(array[i]) / Math.LN10
+            }      
+        }
+
+        return arrayLog
     }
 
     _getLastDate() {

@@ -50,16 +50,26 @@
 		  		<h1>Coronavirus COVID-19 Argentina</h1>
 			</div>
 			<div class="w-100"></div>
-			<div class="col-8">
+			<div class="col">
 				<h5>Actualización diaria</h5>
 					<p class="font-weight-lighter">Última fecha de actualización: <span id="lastDate"></span></p>
 			</div>
-			<div class="col-4">
+			<div class="w-100"></div>
+			<div class="col-6">
 				<div class="form-group">
 					<label for="sel1">Origen de Datos</label>
 					<select class="form-control" id="datasourceSelector">
 						<option value="0">OMS (Organización Mundial de la Salud)</option>
 						<option value="1">MS (Ministerio de Salud) - Actualización Manual</option>
+					</select>
+				</div>							
+			</div>
+			<div class="col-6">
+				<div class="form-group">
+					<label for="sel1">Escala de Gráficos</label>
+					<select class="form-control" id="scaleSelector">
+						<option value="linear">Lineal</option>
+						<option value="logarithmic">Logarítmica</option>
 					</select>
 				</div>							
 			</div>
@@ -104,20 +114,29 @@
 
   	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 	<script src="js/jquery.csv.min.js"></script>
-	<script type="text/javascript" src="js/infocovid19argentina.js?v=202003310003"></script>
+	<script type="text/javascript" src="js/infocovid19argentina.js?v=202004090001"></script>
 	<script type="text/javascript">
-		const infoCovid19 = new InfoCovid19Argentina({datasource: 1, timelineId: "timeline", barchartId: "barchart", percentageId: "percentage", lastDateId: "lastDate", datasourceDescriptionId: "dsDescription"})
+		const defaultDatasource = 1
+		const defaultScale = "linear" // "logarithmic"
+		
+		const infoCovid19 = new InfoCovid19Argentina({datasource: defaultDatasource, timelineId: "timeline", barchartId: "barchart", percentageId: "percentage", lastDateId: "lastDate", datasourceDescriptionId: "dsDescription", scale: defaultScale})
 		
 		$(document).ready(() => {
 			infoCovid19.buildAll()
 
-			$('#datasourceSelector').val(1)
-
+			$('#datasourceSelector').val(defaultDatasource)
 			$("#datasourceSelector").change(function(){
 		        const selectedDatasource = $(this).children("option:selected").val()
 		        infoCovid19.indexDatasource = selectedDatasource
 		        infoCovid19.buildAll()
-		    });
+		    })
+
+			$('#scaleSelector').val(defaultScale)
+		    $("#scaleSelector").change(function(){
+		        const selectedScale = $(this).children("option:selected").val()
+		        infoCovid19.scale = selectedScale
+		        infoCovid19.render()
+		    })
 		});
 	</script>
 </body>
